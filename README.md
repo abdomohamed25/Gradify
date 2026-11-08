@@ -184,3 +184,19 @@ dotnet run
 - The verification code expires after 10 minutes (`EmailVerification:CodeExpiryMinutes`).
 - To protect other endpoints later, add `[Authorize]` above the controller/action.
 - CORS allows `localhost:5173` (Vite), `localhost:3000`, and the three Vercel URLs (gradify-two / gradify-five / gradify-pi-red) — edit the list in Program.cs if the frontend URL changes.
+## Settings & Quick Actions
+
+All endpoints below require `Authorization: Bearer <token>` (token from `/api/auth/login`).
+
+| Method | Route | Purpose |
+|---|---|---|
+| GET | `/api/settings` | Load the current user's settings (theme, notifications, language). Created with defaults on first call. |
+| PUT | `/api/settings` | Save settings: `theme` (Light/Dark), `notificationsEnabled`, `language` (en/ar). |
+| POST | `/api/settings/reset` | Back to defaults. |
+| GET | `/api/quick-actions` | Quick actions allowed for the current user's role. |
+
+Setup:
+- The new files use the same `AuthDemo` namespaces. Add the Settings and Quick Actions registration lines to `Program.cs`, right after the `IEmailService` line.
+- Create the table: `dotnet ef migrations add AddUserSettings --context SettingsDbContext --output-dir Migrations/Settings`, then `dotnet ef database update --context SettingsDbContext`.
+- There are now two DbContexts, so EF commands for the existing one need `--context ApplicationDbContext`.
+- Full details: `docs/Settings-QuickActions.md`.
